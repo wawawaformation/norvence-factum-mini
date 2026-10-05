@@ -33,7 +33,7 @@ class HttpLLMClient:
         self.endpoint = endpoint or os.environ["LLM_ENDPOINT"]
         self.api_key = api_key or os.environ["LLM_API_KEY"]
 
-    def complete(self, prompt: str) -> str:
+    def complete(self, prompt: str) -> str:  # pragma: no cover - appel réseau réel, testé hors CI
         body = json.dumps({"prompt": prompt, "temperature": 0}).encode("utf-8")
         request = urllib.request.Request(
             self.endpoint,

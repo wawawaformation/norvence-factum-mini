@@ -8,6 +8,7 @@ dependencies = []
 [dependency-groups]
 dev = [
     "pytest>=8,<9",
+    "pytest-cov>=7.1.0",
     "ruff>=0.6,<0.10",
 ]
 
@@ -20,6 +21,18 @@ packages = ["app"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.coverage.run]
+# Mesure aussi les branches (vrai/faux de chaque if), pas seulement les lignes exécutées
+branch = true
+# Ne mesure que le code applicatif, pas les tests
+source = ["app"]
+
+[tool.coverage.report]
+# Mesure au 2026-10-05 : 95 % (lignes + branches). L'incident a eu lieu à 79 %, sans seuil.
+# 93 bloque tout retour vers cet état tout en laissant 2 points de marge pour les refactorings.
+# Cliquet : remonter ce seuil quand la couverture progresse, ne jamais le baisser.
+fail_under = 93
 
 [tool.ruff]
 line-length = 100

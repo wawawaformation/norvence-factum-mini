@@ -1,6 +1,8 @@
 from decimal import Decimal
 
-from app.extract import Invoice, extract_invoice
+import pytest
+
+from app.extract import ExtractionError, Invoice, extract_invoice
 from app.llm_client import MockLLMClient
 
 
@@ -23,3 +25,11 @@ def test_extract_invoice_happy_path():
         montant_ttc=Decimal("980.50"),
     )
     assert "PG-2024-0412" in client.prompts[0]
+
+
+def test_extract_invoice_rejects_non_json_response():
+    # Le LLM peut répondre en texte libre : l'erreur doit être explicite, pas un crash JSON brut
+    client = MockLLMClient("Désolé, je ne peux pas lire cette facture.")
+
+    with pytest.raises(ExtractionError):
+        extract_invoice("Facture illisible", client)
